@@ -18,7 +18,7 @@ class Like
     private $user;
 
     #[ORM\ManyToOne(targetEntity: publication::class, inversedBy: 'likes')]
-    private $publications;
+    private $publication;
 
     #[ORM\ManyToOne(targetEntity: Comment::class, inversedBy: 'likes')]
     private $comments;
@@ -43,14 +43,14 @@ class Like
         return $this;
     }
 
-    public function getPublications(): ?publication
+    public function getpublication(): ?publication
     {
-        return $this->publications;
+        return $this->publication;
     }
 
-    public function setPublications(?publication $publications): self
+    public function setpublication(?publication $publication): self
     {
-        $this->publications = $publications;
+        $this->publication = $publication;
 
         return $this;
     }

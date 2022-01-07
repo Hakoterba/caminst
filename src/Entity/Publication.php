@@ -24,16 +24,17 @@ class Publication
     #[ORM\OneToMany(mappedBy: 'publication', targetEntity: Comment::class)]
     private $comments;
 
-    #[ORM\OneToMany(mappedBy: 'publications', targetEntity: Like::class)]
+    #[ORM\OneToMany(mappedBy: 'publication', targetEntity: Like::class)]
     private $likes;
 
-    #[ORM\ManyToOne(targetEntity: picture::class, inversedBy: 'publications')]
-    private $pictures;
+    #[ORM\OneToMany(mappedBy: 'publication', targetEntity: Picture::class)]
+    private $picture;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->picture = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,14 +126,32 @@ class Publication
         return $this;
     }
 
-    public function getPictures(): ?picture
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPicture(): Collection
     {
-        return $this->pictures;
+        return $this->picture;
     }
 
-    public function setPictures(?picture $pictures): self
+    public function addPicture(Picture $picture): self
     {
-        $this->pictures = $pictures;
+        if (!$this->picture->contains($picture)) {
+            $this->picture[] = $picture;
+            $picture->setPublication($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->picture->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getPublication() === $this) {
+                $picture->setPublication(null);
+            }
+        }
 
         return $this;
     }

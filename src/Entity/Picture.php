@@ -24,13 +24,8 @@ class Picture
     #[ORM\Column(type: 'string', length: 30)]
     private $path;
 
-    #[ORM\OneToMany(mappedBy: 'pictures', targetEntity: Publication::class)]
-    private $publications;
-
-    public function __construct()
-    {
-        $this->publications = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Publication::class, inversedBy: 'picture')]
+    private $publication;
 
     public function getId(): ?int
     {
@@ -73,32 +68,14 @@ class Picture
         return $this;
     }
 
-    /**
-     * @return Collection|Publication[]
-     */
-    public function getPublications(): Collection
+    public function getPublication(): ?Publication
     {
-        return $this->publications;
+        return $this->publication;
     }
 
-    public function addPublication(Publication $publication): self
+    public function setPublication(?Publication $publication): self
     {
-        if (!$this->publications->contains($publication)) {
-            $this->publications[] = $publication;
-            $publication->setPictures($this);
-        }
-
-        return $this;
-    }
-
-    public function removePublication(Publication $publication): self
-    {
-        if ($this->publications->removeElement($publication)) {
-            // set the owning side to null (unless already changed)
-            if ($publication->getPictures() === $this) {
-                $publication->setPictures(null);
-            }
-        }
+        $this->publication = $publication;
 
         return $this;
     }

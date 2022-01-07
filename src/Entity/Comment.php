@@ -24,6 +24,9 @@ class Comment
     #[ORM\OneToMany(mappedBy: 'comments', targetEntity: Like::class)]
     private $likes;
 
+    #[ORM\Column(type: 'text')]
+    private $text;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -84,6 +87,18 @@ class Comment
                 $like->setComments(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(string $text): self
+    {
+        $this->text = $text;
 
         return $this;
     }
